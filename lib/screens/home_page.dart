@@ -1,18 +1,25 @@
 import 'dart:async';
 import 'dart:convert';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+// import 'package:just_audio_libwinmedia/just_audio_libwinmedia.dart';
+import 'package:just_audio/just_audio.dart';
+
+
 
 class Attraction {
   final int id;
   final String objectName;
   final String location;
+  final String audioPath;
   final String content;
 
   const Attraction({
     required this.id,
     required this.objectName,
     required this.location,
+    required this.audioPath,
     required this.content,
   });
 
@@ -21,6 +28,7 @@ class Attraction {
         id: json['id'],
         objectName: json['object_name'],
         location: json['location'],
+        audioPath: json['audio'],
         content: json['content']);
   }
 }
@@ -40,6 +48,7 @@ Future<Attraction> fetchAttraction(String attrName) async {
     throw Exception('Failed to load attraction guide');
   }
 }
+
 
 class AiGuide extends StatelessWidget {
   const AiGuide({super.key});
@@ -69,9 +78,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _attraction = '';
   String _content = '';
+  String _audioPath = '';
   String toFind = '';
   bool apiCall = false;
   final myController = TextEditingController();
+  final player = AudioPlayer();
+  // final cache = AudioCache();
+  final serverPath = 'http://10.0.2.2:8000';
 
   @override
   void dispose() {
@@ -87,10 +100,13 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _attraction = attraction.objectName;
         _content = attraction.content;
+        _audioPath = serverPath + attraction.audioPath;
       });
     }, onError: (error) {
       setState(() {
         _attraction = error.toString();
+        _content = error.toString();
+        _audioPath = error.toString();
       });
     });
     apiCall = true;
@@ -128,18 +144,45 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               padding: const EdgeInsets.only(
-                  left: 10, right: 10, top: 20, bottom: 20),
-              child: Text(
-                _content,
+                  left: 100, right: 100, top: 20, bottom: 20
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                children: [
+                  FloatingActionButton(
+                    onPressed: () {
+                      print('!!!!!!!!!!!!$_audioPath!!!!!!!!!@!!!!!!!');
+                      // player.setUrl('http://10.0.2.2:8000/media/Winter_Palace_YteYQ4D.mp3');
+                      player.setUrl(_audioPath);
+                      player.play();
+                    },
+                    child: const Icon(Icons.play_arrow),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      player.pause();
+                    },
+                    child: const Icon(Icons.stop),
+                  ),
+                ],
               ),
             ),
+            // Container(
+            //   padding: const EdgeInsets.only(
+            //       left: 10, right: 10, top: 20, bottom: 20),
+            //   child: Text(
+            //     _content,
+            //   ),
+            // ),
           ],
         ),
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: _getAttraction,
-        tooltip: 'Find attraction', child: const Icon(Icons.search),
+        tooltip: 'Find attraction',
+        child: const Icon(Icons.search),
 
       ),
 
