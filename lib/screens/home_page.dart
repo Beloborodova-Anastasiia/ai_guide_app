@@ -5,33 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 // import 'package:just_audio_libwinmedia/just_audio_libwinmedia.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:ai_guide/models/attraction.dart';
 
-
-
-class Attraction {
-  final int id;
-  final String objectName;
-  final String location;
-  final String audioPath;
-  final String content;
-
-  const Attraction({
-    required this.id,
-    required this.objectName,
-    required this.location,
-    required this.audioPath,
-    required this.content,
-  });
-
-  factory Attraction.fromJson(Map<String, dynamic> json) {
-    return Attraction(
-        id: json['id'],
-        objectName: json['object_name'],
-        location: json['location'],
-        audioPath: json['audio'],
-        content: json['content']);
-  }
-}
 
 Future<Attraction> fetchAttraction(String attrName) async {
   var url = Uri.parse('http://10.0.2.2:8000/get_guide/');
@@ -100,7 +75,8 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _attraction = attraction.objectName;
         _content = attraction.content;
-        _audioPath = serverPath + attraction.audioPath;
+        // _audioPath = serverPath + attraction.audioPath;
+        _audioPath = serverPath + '/get_audio/' + attraction.id.toString() + '/';
       });
     }, onError: (error) {
       setState(() {
@@ -125,12 +101,28 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Container(
               padding: const EdgeInsets.all(20),
-              child: TextField(
-                controller: myController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter attraction you want to find',
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children:[
+                  Expanded(
+                      child: TextField(
+                        controller: myController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Enter attraction you want to find',
+                        ),
+                      ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    child: FloatingActionButton(
+                      onPressed: _getAttraction,
+                      tooltip: 'Find attraction',
+                      child: const Icon(Icons.search),
+                    ),
+                  ),
+
+                ],
               ),
             ),
             Container(
@@ -152,8 +144,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   FloatingActionButton(
                     onPressed: () {
-                      print('!!!!!!!!!!!!$_audioPath!!!!!!!!!@!!!!!!!');
-                      // player.setUrl('http://10.0.2.2:8000/media/Winter_Palace_YteYQ4D.mp3');
                       player.setUrl(_audioPath);
                       player.play();
                     },
@@ -168,24 +158,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            // Container(
-            //   padding: const EdgeInsets.only(
-            //       left: 10, right: 10, top: 20, bottom: 20),
-            //   child: Text(
-            //     _content,
-            //   ),
-            // ),
+            Container(
+              padding: const EdgeInsets.only(
+                  left: 10, right: 10, top: 20, bottom: 20),
+              child: Text(
+                _content,
+              ),
+            ),
           ],
         ),
       ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: _getAttraction,
-        tooltip: 'Find attraction',
-        child: const Icon(Icons.search),
-
-      ),
-
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
