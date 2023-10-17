@@ -1,11 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-// import 'package:just_audio_libwinmedia/just_audio_libwinmedia.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:ai_guide/models/attraction.dart';
+
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
 
 Future<Attraction> fetchAttraction(String attrName) async {
@@ -24,33 +32,7 @@ Future<Attraction> fetchAttraction(String attrName) async {
   }
 }
 
-
-class AiGuide extends StatelessWidget {
-  const AiGuide({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AI Guide',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'AU Guide Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   String _attraction = '';
   String _content = '';
   String _audioPath = '';
@@ -67,22 +49,21 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  @override
   void _getAttraction() {
     toFind = myController.text;
     var attr = fetchAttraction(toFind);
     attr.then((attraction) {
       setState(() {
-        _attraction = attraction.objectName;
-        _content = attraction.content;
-        // _audioPath = serverPath + attraction.audioPath;
-        _audioPath = serverPath + '/get_audio/' + attraction.id.toString() + '/';
+      _attraction = attraction.objectName;
+      _content = attraction.content;
+      // _audioPath = serverPath + attraction.audioPath;
+      _audioPath = serverPath + '/get_audio/' + attraction.id.toString() + '/';
       });
     }, onError: (error) {
       setState(() {
-        _attraction = error.toString();
-        _content = error.toString();
-        _audioPath = error.toString();
+      _attraction = error.toString();
+      _content = error.toString();
+      _audioPath = error.toString();
       });
     });
     apiCall = true;
@@ -105,13 +86,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children:[
                   Expanded(
-                      child: TextField(
-                        controller: myController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Enter attraction you want to find',
-                        ),
+                    child: TextField(
+                      controller: myController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Enter attraction you want to find',
                       ),
+                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.all(20),
