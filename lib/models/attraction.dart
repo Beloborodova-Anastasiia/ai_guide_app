@@ -1,11 +1,11 @@
 class Attraction {
-  final int id;
-  final String objectName;
-  final String location;
+  int id;
+  String objectName;
+  String location;
   // final String audioPath;
-  final String content;
+  String content;
 
-  const Attraction({
+  Attraction({
     required this.id,
     required this.objectName,
     required this.location,

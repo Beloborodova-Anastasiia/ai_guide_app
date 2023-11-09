@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
 import 'package:ai_guide/models/attraction.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+
+import 'attraction_details.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -17,7 +20,8 @@ class HomePage extends StatefulWidget {
 
 
 Future<Attraction> fetchAttraction(String attrName) async {
-  var url = Uri.parse('http://10.0.2.2:8000/get_guide/');
+  var url = Uri.parse('http://13.43.86.146:80/get_guide/');
+  // var url = Uri.parse('http://10.0.2.2:8000/get_guide/');
   Map data = {'query': attrName};
   var body = json.encode(data);
   var response = await http.post(url,
@@ -33,15 +37,17 @@ Future<Attraction> fetchAttraction(String attrName) async {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _attraction = '';
+  String _attractionName = '';
   String _content = '';
   String _audioPath = '';
   String toFind = '';
+  int _attractionId = 0;
+  String _location = '';
   bool apiCall = false;
   final myController = TextEditingController();
   final player = AudioPlayer();
   // final cache = AudioCache();
-  final serverPath = 'http://10.0.2.2:8000';
+  final serverPath = 'http://13.43.86.146:80';
 
   @override
   void dispose() {
@@ -54,19 +60,35 @@ class _HomePageState extends State<HomePage> {
     var attr = fetchAttraction(toFind);
     attr.then((attraction) {
       setState(() {
-      _attraction = attraction.objectName;
+      _attractionName = attraction.objectName;
       _content = attraction.content;
+      _attractionId = attraction.id;
+      _location = attraction.location;
       // _audioPath = serverPath + attraction.audioPath;
       _audioPath = serverPath + '/get_audio/' + attraction.id.toString() + '/';
       });
     }, onError: (error) {
       setState(() {
-      _attraction = error.toString();
+      _attractionName = error.toString();
       _content = error.toString();
       _audioPath = error.toString();
       });
     });
     apiCall = true;
+  }
+
+  Future<Attraction>  _getAttr() async {
+    toFind = myController.text;
+    var attr = fetchAttraction(toFind);
+    // attr.then((attraction) {
+    //   setState(() {
+    //     attraction.id = attraction.id;
+    //     attraction.objectName = attraction.objectName;
+    //     attraction.content = attraction.content;
+    //     attraction.location = attraction.location;
+    //   });
+    // });
+    return attr;
   }
 
   @override
@@ -97,7 +119,29 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     child: FloatingActionButton(
-                      onPressed: _getAttraction,
+                      onPressed: () {
+                        // Attraction attr = await _getAttr();
+                        _getAttraction();
+                        while (_attractionName == ''){
+                          Center(
+                            child: LoadingAnimationWidget.waveDots(
+                              color: Theme.of(context).colorScheme.inversePrimary,
+                              size: 100,
+                            ),
+                          );
+                        }
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(builder: (context) => AttrDetails(
+                        //       attractionToFind:  Attraction(
+                        //           id: _attractionId,
+                        //           objectName: _attractionName,
+                        //           location: _location,
+                        //           content: _content)
+                        //
+                        //       ,))
+                        // );
+                        },
                       tooltip: 'Find attraction',
                       child: const Icon(Icons.search),
                     ),
@@ -110,7 +154,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(
                   left: 10, right: 10, top: 20, bottom: 20),
               child: Text(
-                _attraction,
+                _attractionName,
                 style: Theme.of(context).textTheme.displaySmall,
 
               ),
@@ -146,6 +190,7 @@ class _HomePageState extends State<HomePage> {
                 _content,
               ),
             ),
+
           ],
         ),
       ),
