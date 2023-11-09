@@ -19,8 +19,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.1.0
   json_annotation: ^4.6.0
-#  attraction_repository:
-#    path: packages/attraction_repository
+  attraction_repository:
+    path: packages/attraction_repository
   attraction_api:
     path: packages/attraction_api
 
