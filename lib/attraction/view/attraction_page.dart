@@ -8,11 +8,9 @@ import '../bloc/attraction_bloc.dart';
 class AttractionScreen extends StatelessWidget {
   AttractionScreen({Key? key}) : super(key: key);
 
-  // final Attraction attraction;
 
   @override
   Widget build(BuildContext context) {
-    // final attractionBloc = BlocProvider.of<AttractionBloc>(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
