@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:ai_guide/home/home.dart';
 
+import 'attraction/bloc/attraction_bloc.dart';
+
 
 class AiGuideApp extends StatelessWidget {
   const AiGuideApp({Key? key}) : super(key: key);
@@ -12,13 +14,23 @@ class AiGuideApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return RepositoryProvider(
       create: (context) => AttractionRepository(),
-      child: MaterialApp(
-        title: 'AI Guide',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AttractionBloc(attractionRepository: AttractionRepository()),
+          ),
+          BlocProvider(
+            create: (context) => HomeCubit(),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'AI Guide',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: const HomePage(),
         ),
-        home: const HomePage(),
       ),
     );
   }

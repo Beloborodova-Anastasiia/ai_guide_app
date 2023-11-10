@@ -26,16 +26,21 @@ class AiGuideApiClient {
   Future<Attraction> getAttraction({
     required String query,
   }) async {
-    final attractionRequest = Uri.https(_baseUrlAiGuide, 'get_guide', {
-      'latitude': '$query',
-    });
-
-    final weatherResponse = await _httpClient.get(attractionRequest);
-
-    if (weatherResponse.statusCode != 200) {
+    // final attractionRequest = Uri.https(_baseUrlAiGuide, 'get_guide/', {
+    //   "query": "$query",
+    // });
+    final attractionRequest = Uri.http(
+      _baseUrlAiGuide,
+      'get_guide/',
+    );
+    final requestBody = json.encode({'query': query});
+    final attractionResponse = await _httpClient.post(attractionRequest,
+        body: requestBody, headers: {"Content-Type": "application/json"});
+    if (attractionResponse.statusCode != 200) {
       throw AttractionRequestFailure();
     }
-    final bodyJson = jsonDecode(weatherResponse.body) as Map<String, dynamic>;
+    final bodyJson =
+        jsonDecode(attractionResponse.body) as Map<String, dynamic>;
 
     if (!bodyJson.containsKey('object_name')) {
       throw AttractionNotFoundFailure();

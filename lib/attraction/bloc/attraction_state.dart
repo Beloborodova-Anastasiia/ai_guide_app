@@ -1,6 +1,12 @@
 part of 'attraction_bloc.dart';
 
-@immutable
-abstract class AttractionState {}
+class AttractionState {
+  final Attraction attraction;
+  final bool isLoading;
 
-class AttractionInitial extends AttractionState {}
+  AttractionState({
+    Attraction? attraction,
+    this.isLoading = false,
+  }): attraction = attraction ?? Attraction.empty;
+}
+
