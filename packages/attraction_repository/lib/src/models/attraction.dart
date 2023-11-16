@@ -9,6 +9,7 @@ class Attraction extends Equatable {
     required this.id,
     required this.name,
     required this.description,
+    required this.audioUrl,
   });
 
   factory Attraction.fromJson(Map<String, dynamic> json) =>
@@ -19,7 +20,8 @@ class Attraction extends Equatable {
   final int id;
   final String name;
   final String description;
+  final String audioUrl;
 
   @override
-  List<Object> get props => [id, name, description];
+  List<Object> get props => [id, name, description, audioUrl];
 }

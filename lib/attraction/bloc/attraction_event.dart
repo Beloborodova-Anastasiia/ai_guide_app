@@ -8,3 +8,5 @@ class GetAttractionEvent extends AttractionEvent {
 
   GetAttractionEvent(this.query);
 }
+
+

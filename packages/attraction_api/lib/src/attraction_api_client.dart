@@ -50,4 +50,10 @@ class AiGuideApiClient {
 
     return Attraction.fromJson(attractionJson);
   }
+
+  Future<Audio> getAudio({required int id}) async {
+    final strId = id.toString();
+    final url = Uri.http(_baseUrlAiGuide, 'get_audio/$strId/').toString();
+    return Audio(url: url);
+  }
 }

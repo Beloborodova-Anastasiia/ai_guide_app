@@ -14,9 +14,11 @@ Attraction _$AttractionFromJson(Map<String, dynamic> json) => $checkedCreate(
           id: $checkedConvert('id', (v) => v as int),
           name: $checkedConvert('name', (v) => v as String),
           description: $checkedConvert('description', (v) => v as String),
+          audioUrl: $checkedConvert('audio_url', (v) => v as String),
         );
         return val;
       },
+      fieldKeyMap: const {'audioUrl': 'audio_url'},
     );
 
 Map<String, dynamic> _$AttractionToJson(Attraction instance) =>
@@ -24,4 +26,5 @@ Map<String, dynamic> _$AttractionToJson(Attraction instance) =>
       'id': instance.id,
       'name': instance.name,
       'description': instance.description,
+      'audio_url': instance.audioUrl,
     };

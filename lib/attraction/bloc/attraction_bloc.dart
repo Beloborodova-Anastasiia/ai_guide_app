@@ -23,7 +23,7 @@ class AttractionBloc extends Bloc<AttractionEvent, AttractionState> {
     final attraction  = Attraction.fromRepository(
       await _attractionRepository.getAttraction(event.query),
     );
-    print(attraction);
     emit(state.copyWith(attraction: attraction));
   }
+
 }

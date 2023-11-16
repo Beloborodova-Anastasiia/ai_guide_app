@@ -1,3 +1,4 @@
+import 'package:ai_guide/audio/audio_cubit.dart';
 import 'package:attraction_repository/attraction_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,9 @@ class AiGuideApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => HomeCubit(),
+          ),
+          BlocProvider(
+              create: (context) => AudioCubit(),
           ),
         ],
         child: MaterialApp(

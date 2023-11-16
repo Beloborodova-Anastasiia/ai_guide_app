@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:ai_guide/attraction/models/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import '../../audio/audio_cubit.dart';
 import '../bloc/attraction_bloc.dart';
 
 class AttractionScreen extends StatelessWidget {
   AttractionScreen({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
+    final playerCubit = BlocProvider.of<AudioCubit>(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(
             'Attraction',
             style: const TextStyle(fontSize: 22),
+          ),
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back_ios_new_outlined),
+            onPressed: () {
+              Navigator.of(context).pop();
+              playerCubit.resetAudio();
+            },
           ),
         ),
         body: BlocConsumer<AttractionBloc, AttractionState>(
@@ -34,7 +41,9 @@ class AttractionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AttractionBloc, AttractionState>(
+    final attractionState = context.read<AttractionBloc>().state;
+
+    return BlocBuilder<AudioCubit, AudioState>(
       builder: (context, state) {
         return SingleChildScrollView(
           child: Column(
@@ -44,15 +53,16 @@ class AttractionWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(
                     left: 10, right: 10, top: 20, bottom: 20),
                 child: Text(
-                  state.attraction.name,
+                  attractionState.attraction.name,
                   style: Theme.of(context).textTheme.displaySmall,
                 ),
               ),
+              AudioButtonsWidget(),
               Container(
                 padding: const EdgeInsets.only(
                     left: 10, right: 10, top: 20, bottom: 20),
                 child: Text(
-                  state.attraction.description,
+                  attractionState.attraction.description,
                 ),
               ),
             ],
@@ -74,5 +84,53 @@ class LoadingWidget extends StatelessWidget {
         size: 100,
       ),
     );
+  }
+}
+
+class AudioButtonsWidget extends StatelessWidget {
+  const AudioButtonsWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AudioCubit, AudioState>(builder: (context, state) {
+      final attractionState = context.read<AttractionBloc>().state;
+      final playerCubit = BlocProvider.of<AudioCubit>(context);
+      return Container(
+        padding:
+            const EdgeInsets.only(left: 100, right: 100, top: 20, bottom: 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            if ((state is AudioStopped) | (state is AudioInitial))
+              FloatingActionButton(
+                onPressed: () {
+                  playerCubit.playAudio(attractionState.attraction.audioUrl);
+                },
+                child: const Icon(Icons.play_arrow),
+              )
+            else if (state is AudioPaused)
+              FloatingActionButton(
+                onPressed: () {
+                  playerCubit.resumeAudio();
+                },
+                child: const Icon(Icons.play_arrow),
+              )
+            else
+              FloatingActionButton(
+                onPressed: () {
+                  playerCubit.pauseAudio();
+                },
+                child: const Icon(Icons.pause),
+              ),
+            FloatingActionButton(
+              onPressed: () {
+                playerCubit.stopAudio();
+              },
+              child: const Icon(Icons.stop),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

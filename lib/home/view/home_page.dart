@@ -40,7 +40,6 @@ class HomePage extends StatelessWidget {
                       child: FloatingActionButton(
                         child: const Icon(Icons.search),
                         onPressed: () {
-                          // final attrBloc = context.read<AttractionBloc>();
                           Navigator.push(
                               context,
                               MaterialPageRoute(
