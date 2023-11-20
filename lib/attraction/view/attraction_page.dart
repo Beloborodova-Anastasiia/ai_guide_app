@@ -4,6 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../audio/audio_cubit.dart';
 import '../../home/cubit/home_cubit.dart';
+import '../../widgets/loading_widget.dart';
 import '../bloc/attraction_bloc.dart';
 
 class AttractionScreen extends StatelessWidget {
@@ -76,19 +77,6 @@ class AttractionWidget extends StatelessWidget {
   }
 }
 
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: LoadingAnimationWidget.waveDots(
-        color: Theme.of(context).colorScheme.inversePrimary,
-        size: 100,
-      ),
-    );
-  }
-}
 
 class AudioButtonsWidget extends StatelessWidget {
   const AudioButtonsWidget({super.key});

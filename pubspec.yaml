@@ -29,6 +29,8 @@ dependencies:
   landmark_repository:
     path: packages/landmark_repository
   flutter_dotenv: ^5.1.0
+  location_service:
+    path: packages/location_service
 
 dev_dependencies:
   bloc_test: ^9.1.0

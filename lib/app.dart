@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ai_guide/home/home.dart';
 import 'package:google_maps_api/google_maps_api.dart';
 import 'package:landmark_repository/landmark_repository.dart';
+import 'package:location_service/location_service.dart';
 
 import 'attraction/bloc/attraction_bloc.dart';
 
@@ -36,7 +37,8 @@ class AiGuideApp extends StatelessWidget {
         child: MaterialApp(
           title: 'AI Guide',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: Color.fromRGBO(70, 130, 180, 1.0)),
             useMaterial3: true,
           ),
           home: HomePage(),

@@ -4,10 +4,11 @@ part of 'landmarks_list_bloc.dart';
 abstract class LandmarksListEvent {}
 
 class GetLandmarksListEvent extends LandmarksListEvent {
-  final double latitude;
-  final double longitude;
   final double radius;
   final int maxResultCount;
 
-  GetLandmarksListEvent(this.latitude, this.longitude, this.radius, this.maxResultCount);
+  // GetLandmarksListEvent(this.radius, this.maxResultCount);
+  GetLandmarksListEvent({
+    required this.radius,
+    required this.maxResultCount,});
 }

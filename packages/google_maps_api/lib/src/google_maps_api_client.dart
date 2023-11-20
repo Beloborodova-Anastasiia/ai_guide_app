@@ -55,13 +55,13 @@ class GoogleMapsApiClient {
     }
 
     final bodyJson = jsonDecode(landmarksResponse.body) as Map<String, dynamic>;
+    if (!bodyJson.containsKey('places')) {
+      // throw GoogleMapsNotFoundFailure();
+      return [];
+    }
     List<HistoricalLandmark> historicalLandmarksList =
         List<HistoricalLandmark>.from(bodyJson['places']
             .map((model) => HistoricalLandmark.fromJson(model)));
-
-    if (!bodyJson.containsKey('places')) {
-      throw GoogleMapsNotFoundFailure();
-    }
 
     return historicalLandmarksList;
   }

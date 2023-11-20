@@ -11,6 +11,8 @@ dependencies:
   json_annotation: ^4.6.0
   google_maps_api:
     path: ../google_maps_api
+  location_service:
+    path: ../location_service
 
 dev_dependencies:
   build_runner: ^2.4.6

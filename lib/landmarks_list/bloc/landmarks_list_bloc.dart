@@ -24,15 +24,16 @@ class LandmarksListBloc extends Bloc<LandmarksListEvent, LandmarksListState> {
       GetLandmarksListEvent event, Emitter<LandmarksListState> emit) async {
     emit(state.copyWith(isLoading: true));
     final landmarksListRepo = await _landmarkRepository.getLandmarkList(
-        latitude: event.latitude,
-        longitude: event.longitude,
         radius: event.radius,
         maxResultCount: event.maxResultCount);
-
-    final landmarksList = landmarksListRepo
-        .map((landmark) => Landmark.fromRepository(landmark))
-        .toList();
-
-    emit(state.copyWith(landmarks: landmarksList));
+    if (landmarksListRepo.isEmpty) {
+      emit(state.copyWith(isLoading: false));
+      emit(state.copyWith(notFounded: true));
+    } else {
+      final landmarksList = landmarksListRepo
+          .map((landmark) => Landmark.fromRepository(landmark))
+          .toList();
+      emit(state.copyWith(landmarks: landmarksList));
+    }
   }
 }
