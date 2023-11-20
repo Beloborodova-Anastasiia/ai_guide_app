@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:attraction_api/attraction_api.dart';
+import 'package:ai_guide_api/ai_guide_api.dart';
 
 /// Exception thrown when attractionSearch fails.
 class AttractionRequestFailure implements Exception {}

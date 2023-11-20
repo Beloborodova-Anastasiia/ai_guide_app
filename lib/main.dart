@@ -1,10 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ai_guide/app.dart';
-import 'package:attraction_repository/attraction_repository.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() async {
+
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   runApp(AiGuideApp());
 }

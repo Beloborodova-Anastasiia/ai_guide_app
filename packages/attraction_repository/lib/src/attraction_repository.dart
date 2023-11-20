@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:attraction_api/attraction_api.dart' hide Attraction;
+import 'package:ai_guide_api/ai_guide_api.dart' hide Attraction;
 import 'package:attraction_repository/attraction_repository.dart';
 
 class AttractionRepository {

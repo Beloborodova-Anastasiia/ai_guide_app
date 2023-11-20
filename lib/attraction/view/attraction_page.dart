@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../audio/audio_cubit.dart';
+import '../../home/cubit/home_cubit.dart';
 import '../bloc/attraction_bloc.dart';
 
 class AttractionScreen extends StatelessWidget {
@@ -21,6 +22,7 @@ class AttractionScreen extends StatelessWidget {
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back_ios_new_outlined),
             onPressed: () {
+              playerCubit.stopAudio();
               Navigator.of(context).pop();
               playerCubit.resetAudio();
             },
@@ -42,6 +44,7 @@ class AttractionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final attractionState = context.read<AttractionBloc>().state;
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
 
     return BlocBuilder<AudioCubit, AudioState>(
       builder: (context, state) {
