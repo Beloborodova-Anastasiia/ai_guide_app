@@ -19,7 +19,7 @@ class AiGuideApiClient {
       : _httpClient = httpClient ?? http.Client();
 
   static const _baseUrlAiGuide = '13.43.86.146';
-
+  // static const _baseUrlAiGuide = '10.0.2.2:8000';
   final http.Client _httpClient;
 
   /// Fetches [Attraction] for a given [query].
@@ -33,14 +33,17 @@ class AiGuideApiClient {
       _baseUrlAiGuide,
       'get_guide/',
     );
+
     final requestBody = json.encode({'query': query});
     final attractionResponse = await _httpClient.post(attractionRequest,
         body: requestBody, headers: {"Content-Type": "application/json"});
+    print(attractionResponse.body);
     if (attractionResponse.statusCode != 200) {
       throw AttractionRequestFailure();
     }
     final bodyJson =
-        jsonDecode(attractionResponse.body) as Map<String, dynamic>;
+        // jsonDecode(attractionResponse.body) as Map<String, dynamic>;
+    jsonDecode(utf8.decode(attractionResponse.bodyBytes)) as Map<String, dynamic>;
 
     if (!bodyJson.containsKey('object_name')) {
       throw AttractionNotFoundFailure();
