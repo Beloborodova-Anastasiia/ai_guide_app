@@ -3,12 +3,18 @@ part of 'landmarks_list_bloc.dart';
 @immutable
 abstract class LandmarksListEvent {}
 
-class GetLandmarksListEvent extends LandmarksListEvent {
+class LandmarksNearbyEvent extends LandmarksListEvent {
   final double radius;
   final int maxResultCount;
 
-  // GetLandmarksListEvent(this.radius, this.maxResultCount);
-  GetLandmarksListEvent({
+  LandmarksNearbyEvent({
     required this.radius,
     required this.maxResultCount,});
+}
+
+class LandmarksSearchEvent extends LandmarksListEvent {
+  final String textQuery;
+
+  LandmarksSearchEvent({
+    required this.textQuery});
 }

@@ -18,13 +18,14 @@ class AiGuideApiClient {
   AiGuideApiClient({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
-  static const _baseUrlAiGuide = '13.43.86.146';
-  // static const _baseUrlAiGuide = '10.0.2.2:8000';
+  // static const _baseUrlAiGuide = '18.133.44.154';
+  static const _baseUrlAiGuide = '10.0.2.2:8000';
   final http.Client _httpClient;
 
   /// Fetches [Attraction] for a given [query].
   Future<Attraction> getAttraction({
-    required String query,
+    required String name,
+    required String location
   }) async {
     // final attractionRequest = Uri.https(_baseUrlAiGuide, 'get_guide/', {
     //   "query": "$query",
@@ -33,13 +34,15 @@ class AiGuideApiClient {
       _baseUrlAiGuide,
       'get_guide/',
     );
-
-    final requestBody = json.encode({'query': query});
+    final requestBody = json.encode({
+      'name': name,
+      'location': location
+    });
     final attractionResponse = await _httpClient.post(attractionRequest,
         body: requestBody, headers: {"Content-Type": "application/json"});
-    print(attractionResponse.body);
     if (attractionResponse.statusCode != 200) {
-      throw AttractionRequestFailure();
+      // throw AttractionRequestFailure();
+
     }
     final bodyJson =
         // jsonDecode(attractionResponse.body) as Map<String, dynamic>;
@@ -59,4 +62,5 @@ class AiGuideApiClient {
     final url = Uri.http(_baseUrlAiGuide, 'get_audio/$strId/').toString();
     return Audio(url: url);
   }
+
 }

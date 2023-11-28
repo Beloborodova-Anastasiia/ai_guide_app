@@ -45,30 +45,33 @@ class HomePage extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(20),
                       child: FloatingActionButton(
+                        heroTag: 'search',
                         child: const Icon(Icons.search),
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => AttractionScreen(),
-                              ));
-                          attractionBloc
-                              .add(GetAttractionEvent(textController.text));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (_) => AttractionScreen(),
+                          //     ));
+                          // attractionBloc
+                          //     .add(GetAttractionEvent(textController.text));
+                          landmarksBloc.add(LandmarksSearchEvent(
+                              textQuery: textController.text));
                         },
                       ),
                     ),
                   ],
                 ),
               ),
-
               Container(
                 padding: const EdgeInsets.only(left: 20),
                 alignment: Alignment.topLeft,
                 child: FloatingActionButton(
+                  heroTag: 'location',
                   child: const Icon(Icons.location_on),
                   onPressed: () {
-                    landmarksBloc.add(GetLandmarksListEvent(
-                        radius: 1000, maxResultCount: 10));
+                    landmarksBloc.add(
+                        LandmarksNearbyEvent(radius: 1000, maxResultCount: 10));
                   },
                 ),
               ),
@@ -86,51 +89,48 @@ class LandmarksListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<LandmarksListBloc, LandmarksListState>(
         builder: (context, state) {
       final landmarksBloc = BlocProvider.of<LandmarksListBloc>(context);
       final landmarks =
-      context.select((LandmarksListBloc bloc) => bloc.state.landmarks);
+          context.select((LandmarksListBloc bloc) => bloc.state.landmarks);
       final attractionBloc = BlocProvider.of<AttractionBloc>(context);
       return Column(
         children: [
           if (landmarksBloc.state.isLoading) LoadingWidget(),
           if (landmarksBloc.state.landmarks.isNotEmpty)
-          Container(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Nearest historical places',
-                  style: const TextStyle(fontSize: 25),
-                ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                landmarksBloc.state.title,
+                style: const TextStyle(fontSize: 25),
               ),
-                SingleChildScrollView(
-                      //   scrollDirection: Axis.vertical,
-                      physics: ScrollPhysics(),
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          final landmark = landmarks[index];
-                          return ListTile(
-                            title: Text(
-                              landmark.name ?? '',
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            // leading: Text(landmark.name ?? ''),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => AttractionScreen()));
-                              attractionBloc.add(GetAttractionEvent(
-                                  landmark.name + ',' + landmark.location));
-                            },
-                          );
-                        },
-                        itemCount: landmarks.length,
-                      ),
-                    ),
+            ),
+          SingleChildScrollView(
+            //   scrollDirection: Axis.vertical,
+            physics: ScrollPhysics(),
+            child: ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final landmark = landmarks[index];
+                return ListTile(
+                  title: Text(
+                    landmark.name ?? '',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                  // leading: Text(landmark.name ?? ''),
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => AttractionScreen()));
+                    attractionBloc.add(GetAttractionEvent(
+                        name: landmark.name, location: landmark.location));
+                  },
+                );
+              },
+              itemCount: landmarks.length,
+            ),
+          ),
           if (landmarksBloc.state.notFounded)
             Container(
               padding: const EdgeInsets.all(20),
@@ -139,8 +139,8 @@ class LandmarksListWidget extends StatelessWidget {
                 style: const TextStyle(fontSize: 25),
               ),
             ),
-          ],
-      // if (landmarksBloc.state.isLoading) LoadingWidget(),
+        ],
+        // if (landmarksBloc.state.isLoading) LoadingWidget(),
       );
     });
   }

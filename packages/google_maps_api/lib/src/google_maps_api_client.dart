@@ -24,7 +24,7 @@ class GoogleMapsApiClient {
   final http.Client _httpClient;
 
   /// Fetches [HistoricalLandmark] for a given [body].
-  Future<List<HistoricalLandmark>> getHistoricalLandmarkList({
+  Future<List<HistoricalLandmark>> getLandmarksNearby({
     required int maxResultCount,
     required double latitude,
     required double longitude,
@@ -65,4 +65,38 @@ class GoogleMapsApiClient {
 
     return historicalLandmarksList;
   }
+
+  /// Fetches [HistoricalLandmark] for a given [body].
+  Future<List<HistoricalLandmark>> getLandmarksSearch({
+    required String textQuery,
+  }) async {
+    final landmarksRequest =
+        Uri.https(_baseUrlGoogleMaps, '/v1/places:searchText', {});
+    final requestBody = json.encode({
+      "textQuery": textQuery,
+    });
+    final String _accessKey = dotenv.env['GOOGLE_API_KEY'].toString();
+    final landmarksResponse =
+        await _httpClient.post(landmarksRequest, body: requestBody, headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": _accessKey,
+      "X-Goog-FieldMask": "places.displayName,places.formattedAddress,"
+    });
+
+    if (landmarksResponse.statusCode != 200) {
+      throw GoogleMapsRequestFailure();
+    }
+
+    final bodyJson = jsonDecode(landmarksResponse.body) as Map<String, dynamic>;
+    if (!bodyJson.containsKey('places')) {
+      // throw GoogleMapsNotFoundFailure();
+      return [];
+    }
+    List<HistoricalLandmark> historicalLandmarksList =
+        List<HistoricalLandmark>.from(bodyJson['places']
+            .map((model) => HistoricalLandmark.fromJson(model)));
+
+    return historicalLandmarksList;
+  }
+
 }

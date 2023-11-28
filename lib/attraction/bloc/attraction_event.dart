@@ -4,9 +4,10 @@ part of 'attraction_bloc.dart';
 abstract class AttractionEvent {}
 
 class GetAttractionEvent extends AttractionEvent {
-  final String query;
+  final String name;
+  final String location;
 
-  GetAttractionEvent(this.query);
+  GetAttractionEvent({required this.name, required this.location});
 }
 
 

@@ -5,7 +5,6 @@ part 'historical_landmark.g.dart';
 
 @JsonSerializable()
 class HistoricalLandmark {
-
   const HistoricalLandmark({
     required this.formattedAddress,
     required this.displayName,
@@ -20,7 +19,6 @@ class HistoricalLandmark {
 
 @JsonSerializable()
 class DisplayName {
-
   const DisplayName({
     required this.text,
     required this.languageCode,

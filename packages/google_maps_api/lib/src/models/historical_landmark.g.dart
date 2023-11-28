@@ -23,7 +23,7 @@ HistoricalLandmark _$HistoricalLandmarkFromJson(Map<String, dynamic> json) =>
       },
       fieldKeyMap: const {
         'formattedAddress': 'formattedAddress',
-        'displayName': 'displayName'
+        'displayName': 'displayName',
       },
     );
 

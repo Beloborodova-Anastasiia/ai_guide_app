@@ -9,8 +9,10 @@ class AttractionRepository {
 
   final AiGuideApiClient _attractionApiClient;
 
-  Future<Attraction> getAttraction(String query) async {
-    final attraction = await _attractionApiClient.getAttraction(query: query);
+  Future<Attraction> getAttraction(
+      {required String name, required String location}) async {
+    final attraction = await _attractionApiClient.getAttraction(
+        name: name, location: location);
     final audio = await _attractionApiClient.getAudio(id: attraction.id);
     return Attraction(
       id: attraction.id,

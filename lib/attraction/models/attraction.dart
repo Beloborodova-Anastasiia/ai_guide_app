@@ -20,6 +20,7 @@ class Attraction extends Equatable {
       _$AttractionFromJson(json);
 
   factory Attraction.fromRepository(attr_repository.Attraction attraction) {
+
     return Attraction(
       id: attraction.id,
       name: attraction.name,

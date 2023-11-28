@@ -24,4 +24,5 @@ class Attraction extends Equatable {
 
   @override
   List<Object> get props => [id, name, description, audioUrl];
+
 }

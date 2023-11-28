@@ -21,8 +21,13 @@ class AttractionBloc extends Bloc<AttractionEvent, AttractionState> {
   _onAttraction(GetAttractionEvent event, Emitter<AttractionState> emit) async {
     emit(state.copyWith(isLoading: true));
     final attraction  = Attraction.fromRepository(
-      await _attractionRepository.getAttraction(event.query),
+      await _attractionRepository.getAttraction(
+        name: event.name,
+        location: event.location
+      ),
     );
+    print(event.name);
+    print(event.location);
     emit(state.copyWith(attraction: attraction));
   }
 
