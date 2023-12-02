@@ -108,24 +108,43 @@ class LandmarksListWidget extends StatelessWidget {
             ),
           SingleChildScrollView(
             //   scrollDirection: Axis.vertical,
-            physics: ScrollPhysics(),
+            physics: BouncingScrollPhysics(),
             child: ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
+              physics: BouncingScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 final landmark = landmarks[index];
-                return ListTile(
-                  title: Text(
-                    landmark.name ?? '',
-                    style: const TextStyle(fontSize: 20),
+                return Card(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: <Widget> [
+                          CircleAvatar(
+                              backgroundImage:
+                              NetworkImage(landmark.photo.link.toString(), headers:landmark.photo.headers)),
+
+                          Expanded(
+                            child: ListTile(
+                              title: Text(
+                                landmark.name ?? '',
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              // leading: Text(landmark.name ?? ''),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => AttractionScreen()));
+                                attractionBloc.add(GetAttractionEvent(
+                                    name: landmark.name, location: landmark.location));
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  // leading: Text(landmark.name ?? ''),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => AttractionScreen()));
-                    attractionBloc.add(GetAttractionEvent(
-                        name: landmark.name, location: landmark.location));
-                  },
                 );
               },
               itemCount: landmarks.length,

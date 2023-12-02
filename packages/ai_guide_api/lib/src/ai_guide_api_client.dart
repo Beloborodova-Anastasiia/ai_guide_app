@@ -18,8 +18,8 @@ class AiGuideApiClient {
   AiGuideApiClient({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
-  // static const _baseUrlAiGuide = '18.133.44.154';
-  static const _baseUrlAiGuide = '10.0.2.2:8000';
+  static const _baseUrlAiGuide = '18.133.44.154';
+  // static const _baseUrlAiGuide = '10.0.2.2:8000';
   final http.Client _httpClient;
 
   /// Fetches [Attraction] for a given [query].
@@ -30,6 +30,7 @@ class AiGuideApiClient {
     // final attractionRequest = Uri.https(_baseUrlAiGuide, 'get_guide/', {
     //   "query": "$query",
     // });
+
     final attractionRequest = Uri.http(
       _baseUrlAiGuide,
       'get_guide/',
