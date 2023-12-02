@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:http/http.dart' as http;
 import 'package:google_maps_api/google_maps_api.dart';
@@ -47,7 +48,8 @@ class GoogleMapsApiClient {
         await _httpClient.post(landmarksRequest, body: requestBody, headers: {
       "Content-Type": "application/json",
       "X-Goog-Api-Key": _accessKey,
-      "X-Goog-FieldMask": "places.displayName,places.formattedAddress"
+      "X-Goog-FieldMask":
+          "places.displayName,places.formattedAddress,places.photos"
     });
 
     if (landmarksResponse.statusCode != 200) {
@@ -80,7 +82,8 @@ class GoogleMapsApiClient {
         await _httpClient.post(landmarksRequest, body: requestBody, headers: {
       "Content-Type": "application/json",
       "X-Goog-Api-Key": _accessKey,
-      "X-Goog-FieldMask": "places.displayName,places.formattedAddress,"
+      "X-Goog-FieldMask":
+          "places.displayName,places.formattedAddress,places.photos"
     });
 
     if (landmarksResponse.statusCode != 200) {
@@ -99,4 +102,28 @@ class GoogleMapsApiClient {
     return historicalLandmarksList;
   }
 
+  /// Fetches [HistoricalLandmark] for a given [body].
+  PhotoLink getLandmarkPhotoLink({
+    required String photoLink,
+  }) {
+    final photoUri = Uri.https(_baseUrlGoogleMaps, '/v1/$photoLink/media', {
+        "maxHeightPx": "100",
+        "maxWidthPx": "100",
+      });
+    final String _accessKey = dotenv.env['GOOGLE_API_KEY'].toString();
+    final Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": _accessKey,
+    };
+    return PhotoLink(link: photoUri.toString(), headers: headers);
+  }
+}
+
+class PhotoLink {
+  const PhotoLink({
+    required this.link,
+    required this.headers,});
+
+  final String link;
+  final Map<String, String> headers;
 }
