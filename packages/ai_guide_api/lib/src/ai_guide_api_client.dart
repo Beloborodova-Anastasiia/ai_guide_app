@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:ai_guide_api/ai_guide_api.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Exception thrown when attractionSearch fails.
 class AttractionRequestFailure implements Exception {}
@@ -18,7 +19,7 @@ class AiGuideApiClient {
   AiGuideApiClient({http.Client? httpClient})
       : _httpClient = httpClient ?? http.Client();
 
-  static const _baseUrlAiGuide = '18.133.44.154';
+  final String _baseUrlAiGuide = dotenv.env['URL_AI_GUIDE'].toString();
   // static const _baseUrlAiGuide = '10.0.2.2:8000';
   final http.Client _httpClient;
 
